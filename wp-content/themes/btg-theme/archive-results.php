@@ -51,7 +51,7 @@
                                                 <h3><?=the_title();?></h3>
                                             <?php endif; ?>
                                             <?php if( get_field('excerpt') ) : ?>
-                                                <p><?=get_field('excerpt');?></p>
+                                                <p><?=wp_trim_words(get_field('excerpt'), 17);?></p>
                                             <?php endif; ?>
                                         </div>
                                         <div class="read-more">
