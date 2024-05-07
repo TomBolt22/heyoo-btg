@@ -1,0 +1,109 @@
+section.faq-top {
+    padding: 120px 0 ;
+    padding-top: 160px;
+    @media (max-width: 993px) {
+        padding: 80px;
+        padding-top: 120px;
+    }
+    .white-box {
+        color: $white;
+        background: rgba(255, 255, 255, .1294117647);
+        border: 1px solid $white;
+        min-height: 260px;
+        text-align: center;
+        padding: 40px;
+        min-height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: inset 2px 2px 58px 10px #00000046;
+        @media (max-width: 993px) {
+            padding: 25px;
+            min-height: 150px;
+        }
+        h1 {
+            color: $white;
+            margin-bottom: 0;
+        }
+    }
+}
+section.faqs {
+    padding: 140px 0;
+    @media (max-width: 993px) {
+        padding: 70px 0;
+    }
+    .accordion-wrap {
+        .single-question {
+            border-bottom: 1px solid #fff;
+            button {
+                padding: 20px 10px;
+                padding-right: 30px;
+                width: 100%;
+                text-align: left;
+                border-radius: 0px;
+                text-decoration: none;
+                color: #fff;
+                outline: unset !important;
+                box-shadow: unset !important;
+                transition: all 333ms ease;
+                position: relative;
+                @media (max-width: 993px) {
+                    padding-right: 45px;
+                }
+                &:after {
+                    content: '';
+                    background: url('/wp-content/uploads/2024/04/menu-arrow-down.svg') no-repeat center center / contain;
+                    position: absolute;
+                    top: 31px;
+                    right: 20px;
+                    width: 18px;
+                    height: 10px;
+                    transition: all 333ms ease;
+                }
+                h5 {
+                    margin-bottom: 0;
+                }
+                :hover {
+                    color: #ffffffc9;
+                }
+                &:not(.collapsed):after {
+                    transform: rotate(180deg);
+                }
+            }
+            .row {
+                margin: 20px 0;
+                margin-bottom: 50px;
+                .text-wrap {
+                    margin-bottom: 30px;
+                }
+                .text-wrap, .button-wrapper {
+                    padding-left: 5%;
+                    @media (max-width: 993px) {
+                        padding-left: 0;
+                    }
+                    a.siteCTA:hover {
+                        background: $white;
+                        color: $black;
+                        cursor: pointer;
+                    }
+                }
+                img {
+                    height: 300px;
+                    width: 100%;
+                    object-fit: cover;
+                    object-position: center center;
+                    @media (max-width: 993px) {
+                        margin-bottom: 30px;
+                    }
+                }
+            }
+        }
+    }
+    .modal-content .row {
+        margin: 0 !important;
+    }
+}
+
+.single-question .row {
+    margin: 20px 0;
+}

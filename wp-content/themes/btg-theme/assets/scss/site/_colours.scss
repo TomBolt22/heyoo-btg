@@ -1,0 +1,39 @@
+
+
+$black: #211F1F;
+$white: #fff;
+$red: #DC261F;
+$dark-red: #AA1927;
+$blue: #66ADE0;
+$purple: #2C2E50;
+
+.text-light {
+    color: $white;
+}
+.black-grad-bg {
+    background: rgb(43,41,41);
+    background: linear-gradient(180deg, #2b2929 0%, rgba(0,0,0,1) 96%);
+    .row {
+        color: $white;
+    }
+}
+.alt-black-grad-bg {
+    background: rgb(43,41,41);
+    background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgb(24, 23, 23) 96%);
+    .row {
+        color: $white;
+    }
+}
+.purple-bg {
+    background: $purple;
+    .row {
+        color: $white;
+    }
+}
+.purple-grad-bg {
+    background: $purple;
+    background: linear-gradient(180deg, rgba(44,46,80,1) 0%, rgba(14,14,44,1) 100%);
+    .row {
+        color: $white;
+    }
+}

@@ -1,0 +1,158 @@
+section.about-top {
+    padding: 150px 0;
+    @media (max-width: 993px) {
+        padding: 80px 0;
+        padding-top: 140px;
+    }
+    .row {
+        min-height: 600px;
+        align-items: center;
+        color: $purple;
+        @media (max-width: 993px) {
+            min-height: auto;
+        }
+        .text-wrapper h5 {
+            margin-bottom: 40px;
+        }
+    }
+}
+
+section.result-focused {
+    padding: 110px 0;
+    @media (max-width: 993px) {
+        padding: 60px 0;
+    }
+    .row {
+        color: $white;
+    }
+    .focus-content {
+        margin-bottom: 100px;
+        @media (max-width: 993px) {
+            margin-bottom: 50px;
+        }
+        h3 {
+            max-width: 530px;
+            margin: 0 auto;
+            margin-bottom: 30px;
+        }
+    }
+    .result-points {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin: 0 10%;
+        @media (max-width: 993px) {
+            margin: 0;
+        }
+        .rp {
+            text-align: center;
+            flex-basis: 218px;
+            // transition: all 333ms ease;
+            @media (min-width: 994px) {
+                &:hover {
+                    transform: scale(1.08);
+                }
+            }
+            @media (max-width: 690px) {
+                flex-basis: 100%;
+                margin-bottom: 20px;
+            }
+            img {
+                width: 75px;
+                height: 75px;
+                margin-bottom: 20px;
+            }
+        }
+    }
+}
+
+section.experience-row {
+    padding: 120px 0;
+    background: url('/wp-content/uploads/2024/04/chalk-bg.jpg') no-repeat center center / cover;
+    @media (max-width: 993px) {
+        padding: 60px 0;
+    }
+    .container {
+        position: relative;
+        .def-wrap {
+            max-width: 400px
+        }
+    }
+    .row {
+        color: $white;
+        background: #ffffff21;
+        border: 1px solid $white;
+        min-height: 260px;
+        padding: 20px 60px;
+        align-items: center;
+        @media (max-width: 993px) {
+            margin: 0 10px;
+            padding: 30px;
+            min-height: 200px;
+        }
+    }
+    .ex-mark {
+        position: absolute;
+        bottom: -50px;
+        right: -150px;
+        transform: rotate(35deg);
+        width: 450px;
+        height: auto;
+        @media (max-width: 993px) {
+            width: 230px;
+            bottom: -30px;
+            right: -120px;
+        }
+    }
+}
+
+section.fw-img {
+    img {
+        height: 550px;
+        width: 100%;
+        object-fit: cover;
+        object-position: center center;
+        @media (max-width: 993px) {
+            height: auto;
+            min-height: 200px;
+            max-height: 60vh;
+        }
+    }
+}
+
+section.how-we-work {
+    padding: 150px 0;
+    @media (max-width: 993px) {
+        padding: 80px 0;
+    }
+    .text-wrapper {
+        margin-bottom: 65px;
+        margin-right: 20%;
+        @media (max-width: 993px) {
+            margin-right: 0;
+        }
+        h3 {
+            margin-bottom: 50px;
+            @media (max-width: 993px) {
+                margin-bottom: 30px;
+            }
+        }
+    }
+    .single-point {
+        @media (max-width: 993px) {
+            margin-bottom: 25px;
+        }
+        img {
+            width: 85px;
+            height: 85px;
+            object-fit: contain;
+            margin-bottom: 20px;
+        }
+        p {
+            margin-right: 10%;
+            @media (max-width: 993px) {
+                margin-right: 0;
+            }
+        }
+    }
+}

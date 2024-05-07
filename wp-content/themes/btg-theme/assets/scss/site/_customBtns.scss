@@ -1,0 +1,59 @@
+.siteCTA {
+    padding: 8px 28px;
+    border: 1px solid $white;
+    color: $white;
+    border-radius: 20px;
+    transition: all 333ms ease;
+    text-decoration: none;
+    width: fit-content;
+    &.outline {
+        background: transparent;
+        color: $white;
+        &:hover {
+            background: $white;
+            color: $black;
+        }
+    }
+    &.solid {
+        background: $white;
+        color: $black;
+        &:hover {
+            background: transparent;
+            color: $white;
+        }
+    }
+    &.purple {
+        border-color: $purple !important;
+        &.solid {
+            background: $purple;
+            color: $white;
+            &:hover {
+                background: transparent;
+                color: $purple;
+            }
+        }
+        &.outline {
+            background: transparent;
+            color: $purple;
+            &:hover {
+                background: $purple;
+                color: $white;
+            }
+        }
+    }
+}
+
+.read-more a {
+    position: relative;
+    padding-right: 45px;
+    text-decoration: none !important;
+    &:after {
+        content: '';
+        background: url('/wp-content/uploads/2024/04/arrow-right-black.png') no-repeat center center / contain;
+        width: 36.71px;
+        height: 12.63px;
+        position: absolute;
+        top: 6px;
+        right: 0;
+    }
+}

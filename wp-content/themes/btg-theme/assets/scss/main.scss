@@ -1,0 +1,29 @@
+@import "vendor/bootstrap/bootstrap";
+@import "vendor/fontawesome/fontawesome";
+
+@import "site/colours";
+@import "site/coreStyles";
+@import "core/mixins";
+@import "core/wordpress";
+@import "site/fonts";
+@import "site/customBtns";
+
+
+//Header 
+@import "site/header";
+
+//Pages
+@import "pages/homepage";
+@import "pages/about";
+@import "pages/why-us";
+@import "pages/results";
+@import "pages/podcasts";
+@import "pages/contact";
+@import "pages/faqs";
+@import "pages/our-story";
+
+//Footer
+@import "site/footer";
+
+//responsive stuff
+@import "responsive-styles/mobile";

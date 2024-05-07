@@ -1,0 +1,367 @@
+//Archive 
+section.ra-top.pod-top {
+    padding: 220px 0;
+    @media (max-width: 993px) {
+        padding: 100px 0;
+        padding-top: 140px;
+    }
+    .text-wrapper {
+        p {
+            max-width: 550px;
+            margin: 0 auto;
+        }
+    }
+}
+section.podcast-wrap {
+    padding: 100px 0;
+}
+.pods {
+    display: flex;
+    gap: 50px 30px;
+    flex-wrap: wrap;
+    .single-pod {
+        flex-basis: calc( 50% - 15px );
+        @media (max-width: 890px) {
+            flex-basis: 100%;
+        }
+        .image-wrapper {
+            position: relative;
+            img {
+                width: 100%;
+                aspect-ratio: 1/.82;
+                margin-bottom: 15px;
+                transition: all 333ms ease;
+                &.hover-img {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: calc( 100% - 15px );
+                    opacity: 0;
+                }
+            }
+        }
+        h3 {
+            margin-bottom: 12px;
+        }
+        &.has-hover:hover {
+            .image-wrapper img:not(.hover-img) {
+                opacity: 0;
+            }
+            .image-wrapper img.hover-img {
+                opacity: 1;
+            }
+        }
+    }
+}
+section.more-podcasts .container {
+    color: #fff;
+    padding: 60px;
+    margin-bottom: 110px;
+    .col-12.col-lg-6 {
+        margin-bottom: 50px;
+        h3 {
+            max-width: 488px;
+            @media (max-width: 993px) {
+                max-width: unset;
+            }
+        }
+        .white-underlined {
+            max-width: 450px;
+            @media (max-width: 993px) {
+                max-width: unset;
+            }
+        }
+    }
+    .pod-slider {
+        clip-path: inset(-100vw -110vw -100vw 0);
+        max-width: 1050px;
+        .slick-list {
+            overflow: visible;
+        }
+        .single-pod {
+            color: #fff;
+            margin: 10px;
+            .image-wrapper {
+                margin-bottom: 20px;
+            }
+            img {
+                width: 100%;
+                aspect-ratio: 1/0.80;
+            }
+            h3 {
+                margin-bottom: 15px;
+            }
+            a {
+                color: #fff;
+            }
+            .read-more a:after {
+                filter: invert(1);
+            }
+        }
+        ul.slick-dots {
+            width: fit-content;
+            bottom: -62px;
+            li {
+                margin: 0 2px;
+                button:before {
+                    color: #fff;
+                    border: 1px solid #fff;
+                    content: '';
+                    border-radius: 100%;
+                    width: 10px;
+                    height: 10px;
+                    transition: all 333ms ease;
+                    opacity: 1;
+                }
+                &.slick-active button:before,
+                &.slick-active button:hover:before {
+                    background: #fff;
+                    opacity: 1;
+                }
+            }
+        }
+    }
+    .ps-nav {
+        display: flex;
+        gap: 20px;
+        width: 20%;
+        margin-left: auto;
+    }
+    .ps-nav .prev {
+        transform: translateY(3px) rotate(-180deg);
+        transform-origin: 50% 50%;
+    }
+}
+
+
+// Single Podcast 
+section.pod-top {
+    padding-top: 140px;
+    padding-bottom: 20px;
+    .back-btn {
+        margin-bottom: 50px;
+        a {
+            text-decoration: none;
+            color: #fff;
+        }
+        img {
+            filter: invert(1);
+            width: 30px;
+            height: auto;
+            margin-right: 10px;
+        }
+    }
+    .row {
+        align-items: flex-end;
+    }
+    .col-12:first-child {
+        padding-right: 4%;
+    }
+    .pod-img {
+        margin-bottom: 40px;
+        text-align: right;
+        position: relative;
+        @media (max-width: 993px) {
+            margin-bottom: 20px;
+        }
+        &:after {
+            content: "";
+            background: url(/wp-content/uploads/2024/04/sound-wave.svg) no-repeat center center / contain;
+            height: 120px;
+            min-width: 1200px;
+            width: auto;
+            position: absolute;
+            bottom: -63px;
+            left: 11%;
+        }
+        img {
+            width: 90%;
+            margin-left: auto;
+            @media (max-width: 993px) {
+                width: 100%;
+            }
+        }
+    }
+    .title {
+        margin-bottom: 50px;
+    }
+    .listen {
+        margin-bottom: 60px;
+    }
+    .meta {
+        display: flex;
+        gap: 25px;
+        margin-bottom: 50px;
+        p {
+            margin-bottom: 0;
+        }
+        .share {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            p {
+                margin-bottom: 0;
+                line-height: 100%;
+            }
+            svg {
+                width: 20px !important;
+                height: 20px !important;
+            }
+        }
+    }
+}
+.ymal-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    height: 240px;
+    overflow: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: #999898 #676666;
+    .small-pod {
+        width: 100%;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        position: relative;
+        transition: all 333ms ease;
+        a.absolute-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .inner {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-right: 2%;
+            .image-wrapper,
+            .image-wrapper img {
+                width: 106px !important;
+                height: 95px !important;
+                max-width: 106px;
+                object-fit: contain;
+            }
+            p {
+                font-size: 17px;
+                margin-bottom: 5px;
+            }
+        }
+        &:hover {
+        }
+    }
+    &::-webkit-scrollbar {
+        width: 16px;
+    }
+    &::-webkit-scrollbar-track {
+        background: #676666;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: #999898;
+        border-radius: 10px;
+        border: 3px solid #000000;
+    }
+}
+
+section.pod-meta {
+    margin: 50px 0;
+    .listen-on {
+        a {
+            display: block;
+            margin-bottom: 15px;
+        }
+        img {
+            display: block;
+            max-width: 210px;
+            height: auto;
+            object-fit: contain;
+            &:not(:last-child) {
+                margin-bottom: 20px;
+            }
+        }
+    }
+}
+
+section.pod-lower {
+    padding-bottom: 100px;
+    .transcript {
+        margin-bottom: 80px;
+        a {
+            text-decoration: none;
+            color: $white;
+            svg {
+                margin-left: 20px;
+                transition: all 500ms ease;
+                transform-origin: 50% 50%;
+            }
+            &:not(.collapsed) svg {
+                transform: rotate(180deg);
+            }
+        }
+    }
+    .pod-slider {
+        margin-left: -15px;
+        .single-pod {
+            margin: 15px;
+            img {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            h3 {
+                margin-bottom: 10px;
+            }
+            .read-more a {
+                color: #fff;
+                &:after {
+                    filter: invert(1);
+                    transition: all 333ms ease;
+                }
+                &:hover:after {
+                    transform: translateX(5px);
+                }
+            }
+            .content {
+                margin-right: 6%;
+                @media (max-width: 993px) {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+    .ps-nav {
+        display: flex;
+        gap: 20px;
+        width: 20%;
+        cursor: pointer;
+        .prev {
+            transform: translateY(3px) rotate(-180deg);
+            transform-origin: 50% 50%;
+        }
+        margin-bottom: 80px;
+    }
+    .pod-next-prev {
+        margin-top: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        justify-content: center;
+        align-items: center;
+        a {
+            text-decoration: none !important;
+            color: #fff;
+            img {
+                width: 33px;
+                height: auto;
+                filter: invert(1);
+            }
+        }
+        .prev a img {
+            margin-right: 10px;
+        }
+        .next a img {
+            margin-left: 10px;
+        }        
+    }
+}
