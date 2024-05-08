@@ -49,29 +49,52 @@
 
     add_filter('use_block_editor_for_post', '__return_false');
 
-    function pagination_bar( $query_wp ) {
-        $pages = $query_wp->max_num_pages;
-        $big = 999999999; // need an unlikely integer
-        if ($pages > 1)
-        {
-            $page_current = max(1, get_query_var('paged'));
-            echo paginate_links(array(
-                'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-                'format' => '?paged=%#%',
-                'current' => $page_current,
-                'total' => $pages,
-            ));
+
+// Modify the custom query for podcasts to include pagination
+    function custom_podcasts_archive_query( $query ) {
+        if ( !is_admin() && $query->is_main_query() && is_post_type_archive( 'podcasts' ) ) {
+            $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
+            $args = array(
+                'post_type' => 'podcasts',
+                'orderby' => 'published_date',
+                'order' => 'DESC',
+                'posts_per_page' => 2,
+                'paged' => $paged
+            );
+            $query->set( 'paged', $paged );
+            $query->set( 'posts_per_page', 2 ); // Adjust the number of posts per page as needed
         }
     }
+    add_action( 'pre_get_posts', 'custom_podcasts_archive_query' );
 
-    /**
-     * Fix pagination on archive pages
-     * After adding a rewrite rule, go to Settings > Permalinks and click Save to flush the rules cache
-     */
-    function my_pagination_rewrite() {
-      add_rewrite_rule('blog/page/?([0-9]{1,})/?$', 'index.php?category_name=blog&paged=$matches[1]', 'top');
+// Modify the custom query for results to include pagination
+    function custom_results_archive_query( $query ) {
+        if ( !is_admin() && $query->is_main_query() && is_post_type_archive( 'results' ) ) {
+            $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
+            $args = array(
+                'post_type' => 'results',
+                'orderby' => 'published_date',
+                'order' => 'DESC',
+                'posts_per_page' => 4,
+                'paged' => $paged
+            );
+            $query->set( 'paged', $paged );
+            $query->set( 'posts_per_page', 4 ); // Adjust the number of posts per page as needed
+        }
     }
-    add_action('init', 'my_pagination_rewrite');
+    add_action( 'pre_get_posts', 'custom_results_archive_query' );
+
+
+
+
+    // /**
+    //  * Fix pagination on archive pages
+    //  * After adding a rewrite rule, go to Settings > Permalinks and click Save to flush the rules cache
+    //  */
+    // function my_pagination_rewrite() {
+    //   add_rewrite_rule('blog/page/?([0-9]{1,})/?$', 'index.php?category_name=blog&paged=$matches[1]', 'top');
+    // }
+    // add_action('init', 'my_pagination_rewrite');
 
     // CPT
     if ( ! function_exists('results_pt') ) {
