@@ -25,50 +25,25 @@
             <div class="col-12">
                 <div class="pods">
                     <?php 
-                        $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
-                        $args = array(
-                            'post_type' => 'podcasts',
-                            'orderby' => 'published_date',
-                            'order' => 'DESC',
-                            'posts_per_page' => 2,
-                            'paged' => $paged
-                        );
-                        $custom_loop = new WP_Query($args);
+                    $args = array(
+                        'post_type' => 'podcasts',
+                        'orderby' => 'date',
+                        'order' => 'DESC',
+                        'posts_per_page' => 2,
+                    );
+                    $custom_loop = new WP_Query($args);
+                    if ( $custom_loop->have_posts() ) :
                         while ( $custom_loop->have_posts() ) : $custom_loop->the_post(); 
+                            get_template_part('components/content', 'podcasts');
+                        endwhile;
+                        wp_reset_postdata(); 
+                    else :
+                        echo '<p>No podcasts found.</p>';
+                    endif;
                     ?>
-                    <?php $hov_img = get_field('pod_hover_image'); ?>
-                    <div class="single-pod <?php if($hov_img) { echo 'has-hover'; } ?>" data-aos="fade-up"
-                        data-aos-delay="200">
-                        <div class="inner">
-                            <div class="image-wrapper">
-                                <img src="<?=get_the_post_thumbnail_url();?>" alt="<?=get_the_title();?>"
-                                    class="img-fluid">
-                                <?php if( $hov_img ) : ?>
-                                <img class="hover-img" src="<?=$hov_img['url'];?>" alt="<?=$hov_img['alt'];?>">
-                                <?php endif; ?>
-                            </div>
-                            <div class="content">
-                                <h3><?=get_the_title();?></h3>
-                                <?php if( have_rows('podcast_top_row') ): while( have_rows('podcast_top_row') ) : the_row(); ?>
-                                <p><?=strip_tags(wp_trim_words(get_sub_field('intro'), 17, '...'));?></p>
-                                <?php endwhile; endif; ?>
-                            </div>
-                            <div class="read-more">
-                                <a href="<?=get_the_permalink();?>" class="arrow-btn">Listen Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <?php endwhile; wp_reset_postdata(); ?>
                 </div>
-                <div class="result-pagination">
-                    <?php 
-                        // Pagination
-                        echo paginate_links( array(
-                            'total' => $custom_loop->max_num_pages,
-                            'prev_text' => __('« Previous'),
-                            'next_text' => __('Next »'),
-                        ) );
-                    ?>
+                <div class="mt-4 text-center">
+                    <button class="loadPosts siteCTA purple outline" data-post-type="podcasts">Load More</button>
                 </div>
             </div>
         </div>

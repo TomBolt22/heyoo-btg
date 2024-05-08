@@ -25,59 +25,30 @@
             <div class="col-12">
                 <div class="results">
                     <?php 
-                        $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
-                        $args = array(
-                            'post_type' => 'results',
-                            'orderby' => 'published_date',
-                            'order' => 'DESC',
-                            'posts_per_page' => 4,
-                            'paged' => $paged
-                        );
-                        $custom_loop = new WP_Query($args);
+                    $args = array(
+                        'post_type' => 'results',
+                        'orderby' => 'date', 
+                        'order' => 'DESC',
+                        'posts_per_page' => 2,
+                    );
+                    $custom_loop = new WP_Query($args);
+                     if ( $custom_loop->have_posts() ) :
                         while ( $custom_loop->have_posts() ) : $custom_loop->the_post(); 
+                            get_template_part('components/content', 'results'); 
+                        endwhile;
+                        wp_reset_postdata(); 
+                    else :
+                      echo '<p>No results found.</p>'; 
+                    endif;
                     ?>
-                    <div class="single-result" data-aos="fade-up" data-aos-delay="200">
-                        <div class="inner">
-                            <div class="prob">
-                                <p>Problem solved</p>
-                            </div>
-                            <div class="logo">
-                                <?php $img = get_field('logo'); ?>
-                                <img src="<?=wp_get_attachment_image_url( $img, '' );?>" class="img-fluid">
-                            </div>
-                            <div class="content">
-                                <?php if( get_field('title') ) : ?>
-                                <h3><?=get_field('title');?></h3>
-                                <?php else : ?>
-                                <h3><?=get_the_title();?></h3> <!-- Change 'the_title()' to 'get_the_title()' -->
-                                <?php endif; ?>
-                                <?php if( get_field('excerpt') ) : ?>
-                                <p><?=wp_trim_words(get_field('excerpt'), 17);?></p>
-                                <?php endif; ?>
-                            </div>
-                            <div class="read-more">
-                                <a href="<?=get_the_permalink();?>" class="arrow-btn">Read More</a>
-                            </div>
-                        </div>
-                    </div>
-                    <?php endwhile;?>
                 </div>
-                <div class="result-pagination">
-                    <?php 
-                        global $wp_query;
-                        $big = 999999999; // need an unlikely integer
-                        echo paginate_links( array(
-                            'base' => str_replace( $big, '%#%', get_pagenum_link( $big ) ),
-                            'format' => '?paged=%#%',
-                            'current' => max( 1, get_query_var('paged') ),
-                            'total' => $custom_loop->max_num_pages
-                        ) );
-                    ?>
+                <div class="mt-4 text-center">
+                    <button class="loadPosts siteCTA purple outline" data-post-type="results">Load More</button>
                 </div>
             </div>
         </div>
-    </div>
 </section>
+
 
 
 <?php if( have_rows('video_row', 'option') ) : while( have_rows('video_row', 'option') ) : the_row(); ?>

@@ -46,46 +46,38 @@
 
     remove_filter('acf_the_content', 'wpautop');
 
-
     add_filter('use_block_editor_for_post', '__return_false');
 
+add_action('wp_ajax_load_more_posts', 'load_more_posts');
+add_action('wp_ajax_nopriv_load_more_posts', 'load_more_posts');
 
-// Modify the custom query for podcasts to include pagination
-    function custom_podcasts_archive_query( $query ) {
-        if ( !is_admin() && $query->is_main_query() && is_post_type_archive( 'podcasts' ) ) {
-            $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
-            $args = array(
-                'post_type' => 'podcasts',
-                'orderby' => 'published_date',
-                'order' => 'DESC',
-                'posts_per_page' => 2,
-                'paged' => $paged
-            );
-            $query->set( 'paged', $paged );
-            $query->set( 'posts_per_page', 2 ); // Adjust the number of posts per page as needed
-        }
-    }
-    add_action( 'pre_get_posts', 'custom_podcasts_archive_query' );
+function load_more_posts() {
+    $post_type = $_POST['post_type'];
+    $paged = $_POST['page'];
 
-// Modify the custom query for results to include pagination
-    function custom_results_archive_query( $query ) {
-        if ( !is_admin() && $query->is_main_query() && is_post_type_archive( 'results' ) ) {
-            $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
-            $args = array(
-                'post_type' => 'results',
-                'orderby' => 'published_date',
-                'order' => 'DESC',
-                'posts_per_page' => 4,
-                'paged' => $paged
-            );
-            $query->set( 'paged', $paged );
-            $query->set( 'posts_per_page', 4 ); // Adjust the number of posts per page as needed
-        }
-    }
-    add_action( 'pre_get_posts', 'custom_results_archive_query' );
+    $args = array(
+        'post_type' => $post_type,
+        'orderby' => 'date',
+        'order' => 'DESC',
+        'posts_per_page' => 2,
+        'paged' => $paged
+    );
 
+    $custom_loop = new WP_Query($args);
+    ob_start();
+    if ($custom_loop->have_posts()) :
+        while ($custom_loop->have_posts()) : $custom_loop->the_post();
+            get_template_part('components/content', $post_type); 
+        endwhile;
+        wp_reset_postdata();
+        $output = ob_get_clean();
+        echo json_encode(array('html' => $output, 'more_posts' => $custom_loop->max_num_pages > $paged));
+    else :
+        echo json_encode(array('html' => '', 'more_posts' => false));
+    endif;
 
-
+    wp_die();
+}
 
     // /**
     //  * Fix pagination on archive pages
