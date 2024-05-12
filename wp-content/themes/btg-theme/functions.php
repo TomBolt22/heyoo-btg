@@ -48,36 +48,7 @@
 
     add_filter('use_block_editor_for_post', '__return_false');
 
-add_action('wp_ajax_load_more_posts', 'load_more_posts');
-add_action('wp_ajax_nopriv_load_more_posts', 'load_more_posts');
 
-function load_more_posts() {
-    $post_type = $_POST['post_type'];
-    $paged = $_POST['page'];
-
-    $args = array(
-        'post_type' => $post_type,
-        'orderby' => 'date',
-        'order' => 'DESC',
-        'posts_per_page' => 2,
-        'paged' => $paged
-    );
-
-    $custom_loop = new WP_Query($args);
-    ob_start();
-    if ($custom_loop->have_posts()) :
-        while ($custom_loop->have_posts()) : $custom_loop->the_post();
-            get_template_part('components/content', $post_type); 
-        endwhile;
-        wp_reset_postdata();
-        $output = ob_get_clean();
-        echo json_encode(array('html' => $output, 'more_posts' => $custom_loop->max_num_pages > $paged));
-    else :
-        echo json_encode(array('html' => '', 'more_posts' => false));
-    endif;
-
-    wp_die();
-}
 
     // /**
     //  * Fix pagination on archive pages
@@ -202,6 +173,169 @@ function load_more_posts() {
         }
         add_action( 'init', 'podcast_pt', 0 );
       }
+
+
+
+//Custom Taxonomy for problem solved
+function custom_taxonomy() {
+    $labels = array(
+        'name' => 'Problem Solved Tags',
+        'singular_name' => 'Problem Solved Tag',
+        'search_items' => 'Search Problem Solved Tags',
+        'all_items' => 'All Problem Solved Tags',
+        'parent_item' => 'Parent Problem Solved Tag',
+        'parent_item_colon' => 'Parent Problem Solved Tag:',
+        'edit_item' => 'Edit Problem Solved Tag',
+        'update_item' => 'Update Problem Solved Tag',
+        'add_new_item' => 'Add New Problem Solved Tag',
+        'new_item_name' => 'New Problem Solved Tag Name',
+        'menu_name' => 'Problem Solved Tags',
+    );
+
+    $args = array(
+        'hierarchical' => false,
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => 'tag' ), 
+    );
+
+    register_taxonomy( 'result_tag', array( 'results' ), $args );
+}
+add_action( 'init', 'custom_taxonomy', 0 );
+
+// Custom Taxonomy for Industry
+function custom_industry_taxonomy() {
+    $labels = array(
+        'name' => 'Industry Tags',
+        'singular_name' => 'Industry Tag',
+        'search_items' => 'Search Industry Tags',
+        'all_items' => 'All Industry Tags',
+        'parent_item' => 'Parent Industry Tag',
+        'parent_item_colon' => 'Parent Industry Tags:',
+        'edit_item' => 'Edit Industry Tag',
+        'update_item' => 'Update Industry Tag',
+        'add_new_item' => 'Add New Industry Tag',
+        'new_item_name' => 'New Industry Tag Name',
+        'menu_name' => 'Industry Tags',
+    );
+
+    $args = array(
+        'hierarchical' => false,
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => 'industry' ),
+    );
+
+    register_taxonomy( 'industry_taxonomy', array( 'results' ), $args );
+}
+add_action( 'init', 'custom_industry_taxonomy', 0 );
+
+
+add_action('wp_ajax_filter_results', 'filter_results');
+add_action('wp_ajax_nopriv_filter_results', 'filter_results');
+
+// PHP Part (load_more_posts function)
+function load_more_posts() {
+    $post_type = $_POST['post_type'];
+    $paged = $_POST['page'];
+    $selected_tag = isset($_POST['selected_tag']) ? sanitize_text_field($_POST['selected_tag']) : '';
+    $selected_industry = isset($_POST['selected_industry']) ? sanitize_text_field($_POST['selected_industry']) : '';
+
+    $args = array(
+        'post_type' => $post_type,
+        'orderby' => 'date',
+        'order' => 'DESC',
+        'posts_per_page' => 2,
+        'paged' => $paged
+    );
+
+    if (!empty($selected_tag)) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'result_tag',
+            'field' => 'slug',
+            'terms' => $selected_tag,
+        );
+    }
+
+    if (!empty($selected_industry)) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'industry_taxonomy',
+            'field' => 'slug',
+            'terms' => $selected_industry,
+        );
+    }
+
+    $custom_loop = new WP_Query($args);
+    ob_start();
+    if ($custom_loop->have_posts()) :
+        while ($custom_loop->have_posts()) : $custom_loop->the_post();
+            get_template_part('components/content', $post_type); 
+        endwhile;
+        wp_reset_postdata();
+        $output = ob_get_clean();
+        echo json_encode(array('html' => $output, 'more_posts' => $custom_loop->max_num_pages > $paged));
+    else :
+        echo json_encode(array('html' => '', 'more_posts' => false));
+    endif;
+
+    wp_die();
+}
+
+// PHP Part (filter_results function)
+function filter_results() {
+    $selectedTag = sanitize_text_field($_POST['selected_tag']);
+    $selectedIndustry = sanitize_text_field($_POST['selected_industry']);
+
+    $args = array(
+        'post_type' => 'results',
+        'orderby' => 'date',
+        'order' => 'DESC',
+        'posts_per_page' => 2,
+    );
+
+    if (!empty($selectedTag)) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'result_tag',
+            'field' => 'slug',
+            'terms' => $selectedTag,
+        );
+    }
+
+    if (!empty($selectedIndustry)) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'industry_taxonomy',
+            'field' => 'slug',
+            'terms' => $selectedIndustry,
+        );
+    }
+
+    $custom_loop = new WP_Query($args);
+
+    ob_start();
+    if ($custom_loop->have_posts()) {
+        while ($custom_loop->have_posts()) {
+            $custom_loop->the_post();
+            get_template_part('components/content', 'results');
+        }
+    } else {
+        echo '<p>No results found.</p>';
+    }
+    wp_reset_postdata();
+    $response = ob_get_clean();
+
+    echo $response;
+    wp_die();
+}
+
+// AJAX Actions
+add_action('wp_ajax_load_more_posts', 'load_more_posts');
+add_action('wp_ajax_nopriv_load_more_posts', 'load_more_posts');
+add_action('wp_ajax_filter_results', 'filter_results');
+add_action('wp_ajax_nopriv_filter_results', 'filter_results');
 
 
 

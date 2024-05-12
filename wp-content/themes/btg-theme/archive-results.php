@@ -21,6 +21,40 @@
 
 <section class="results-wrap">
     <div class="container">
+
+        <div class="filter-container flex flex-row">
+
+            <label for="filter-industry">Search by Industry - </label>
+            <select id="filter-industry">
+                <option value="">All</option>
+                <?php 
+                $industry_terms = get_terms(array(
+                    'taxonomy' => 'industry_taxonomy', 
+                    'hide_empty' => false,
+                ));
+                if ($industry_terms && !is_wp_error($industry_terms)) :
+                    foreach ($industry_terms as $term) : ?>
+                <option value="<?php echo $term->slug; ?>"><?php echo $term->name; ?></option>
+                <?php endforeach;
+                endif; ?>
+            </select>
+
+            <label for="filter-tags">Problem Solved - </label>
+            <select id="filter-tags">
+                <option value="">All</option>
+                <?php 
+                $terms = get_terms(array(
+                    'taxonomy' => 'result_tag',
+                    'hide_empty' => false,
+                ));
+                if ($terms && !is_wp_error($terms)) :
+                    foreach ($terms as $term) : ?>
+                <option value="<?php echo $term->slug; ?>"><?php echo $term->name; ?></option>
+                <?php endforeach;
+                endif; ?>
+            </select>
+        </div>
+
         <div class="row">
             <div class="col-12">
                 <div class="results">
@@ -42,7 +76,7 @@
                     endif;
                     ?>
                 </div>
-                <div class="mt-4 text-center">
+                <div class="mt-4 text-center " data-aos="fade-up" data-aos-delay="400">
                     <button class="loadPosts siteCTA purple outline" data-post-type="results">Load More</button>
                 </div>
             </div>

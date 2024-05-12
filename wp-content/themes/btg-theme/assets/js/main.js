@@ -135,21 +135,25 @@ jQuery(function () {
   $(document).ready(function ($) {
     var page = 2;
     var isLoading = false;
-
+    var selectedTag = "";
+    var selectedIndustry = "";
     $(".loadPosts").on("click", function () {
       if (isLoading) return;
       isLoading = true;
       var ajaxurl = "/wp-admin/admin-ajax.php";
       var postType = $(this).data("post-type");
       var container = postType === "podcasts" ? ".pods" : ".results";
+      var data = {
+        action: "load_more_posts",
+        post_type: postType,
+        page: page,
+        selected_tag: selectedTag,
+        selected_industry: selectedIndustry,
+      };
       $.ajax({
         url: ajaxurl,
         type: "post",
-        data: {
-          action: "load_more_posts",
-          post_type: postType,
-          page: page,
-        },
+        data: data,
         success: function (response) {
           var data = JSON.parse(response);
           if (data.html.trim() !== "") {
@@ -157,6 +161,7 @@ jQuery(function () {
             if (!data.more_posts) {
               $(".loadPosts[data-post-type='" + postType + "']").hide();
             } else {
+              $(".loadPosts[data-post-type='" + postType + "']").show();
               page++;
             }
           } else {
@@ -165,6 +170,34 @@ jQuery(function () {
           isLoading = false;
         },
       });
+    });
+
+    function updateResults() {
+      var ajaxurl = "/wp-admin/admin-ajax.php";
+      var data = {
+        action: "filter_results",
+        selected_industry: selectedIndustry,
+        selected_tag: selectedTag,
+      };
+      $.ajax({
+        url: ajaxurl,
+        type: "POST",
+        data: data,
+        success: function (response) {
+          $(".results").html(response);
+          $(".loadPosts").show();
+        },
+        error: function (xhr, status, error) {
+          console.error(xhr.responseText);
+        },
+      });
+    }
+
+    // Filter tags for results page
+    $("#filter-industry, #filter-tags").change(function () {
+      selectedIndustry = $("#filter-industry").val();
+      selectedTag = $("#filter-tags").val();
+      updateResults();
     });
   });
 });

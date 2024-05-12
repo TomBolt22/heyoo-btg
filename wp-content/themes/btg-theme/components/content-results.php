@@ -1,7 +1,14 @@
        <div class="single-result" data-aos="fade-up" data-aos-delay="200">
            <div class="inner">
-               <div class="prob">
-                   <p>Problem solved</p>
+               <div class="tags">
+                   <?php 
+                        $tags = get_the_terms(get_the_ID(), 'result_tag');
+                        if ($tags && !is_wp_error($tags)) {
+                            foreach ($tags as $tag) {
+                                echo '<div class="prob"> <p>' . $tag->name . '</p></div>'; 
+                            }
+                        }
+                        ?>
                </div>
                <div class="logo">
                    <?php $img = get_field('logo'); ?>
