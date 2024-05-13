@@ -67,22 +67,6 @@
     }
     add_action( 'pre_get_posts', 'custom_podcasts_archive_query' );
 
-// Modify the custom query for results to include pagination
-    function custom_results_archive_query( $query ) {
-        if ( !is_admin() && $query->is_main_query() && is_post_type_archive( 'results' ) ) {
-            $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
-            $args = array(
-                'post_type' => 'results',
-                'orderby' => 'published_date',
-                'order' => 'DESC',
-                'posts_per_page' => 4,
-                'paged' => $paged
-            );
-            $query->set( 'paged', $paged );
-            $query->set( 'posts_per_page', 4 ); // Adjust the number of posts per page as needed
-        }
-    }
-    add_action( 'pre_get_posts', 'custom_results_archive_query' );
 
     /**
      * Fix pagination on archive pages
@@ -207,6 +191,192 @@
         }
         add_action( 'init', 'podcast_pt', 0 );
       }
+
+
+      //Custom Taxonomy for problem solved
+function custom_taxonomy() {
+    $labels = array(
+        'name' => 'Problem Solved Tags',
+        'singular_name' => 'Problem Solved Tag',
+        'search_items' => 'Search Problem Solved Tags',
+        'all_items' => 'All Problem Solved Tags',
+        'parent_item' => 'Parent Problem Solved Tag',
+        'parent_item_colon' => 'Parent Problem Solved Tag:',
+        'edit_item' => 'Edit Problem Solved Tag',
+        'update_item' => 'Update Problem Solved Tag',
+        'add_new_item' => 'Add New Problem Solved Tag',
+        'new_item_name' => 'New Problem Solved Tag Name',
+        'menu_name' => 'Problem Solved Tags',
+    );
+
+    $args = array(
+        'hierarchical' => false,
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => 'tag' ), 
+    );
+
+    register_taxonomy( 'result_tag', array( 'results' ), $args );
+}
+add_action( 'init', 'custom_taxonomy', 0 );
+
+// Custom Taxonomy for Industry
+function custom_industry_taxonomy() {
+    $labels = array(
+        'name' => 'Industry Tags',
+        'singular_name' => 'Industry Tag',
+        'search_items' => 'Search Industry Tags',
+        'all_items' => 'All Industry Tags',
+        'parent_item' => 'Parent Industry Tag',
+        'parent_item_colon' => 'Parent Industry Tags:',
+        'edit_item' => 'Edit Industry Tag',
+        'update_item' => 'Update Industry Tag',
+        'add_new_item' => 'Add New Industry Tag',
+        'new_item_name' => 'New Industry Tag Name',
+        'menu_name' => 'Industry Tags',
+    );
+
+    $args = array(
+        'hierarchical' => false,
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => 'industry' ),
+    );
+
+    register_taxonomy( 'industry_taxonomy', array( 'results' ), $args );
+}
+add_action( 'init', 'custom_industry_taxonomy', 0 );
+
+
+function custom_results_archive_query( $query ) {
+    if ( !is_admin() && $query->is_main_query() && is_post_type_archive( 'results' ) ) {
+        $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
+        $args = array(
+            'post_type' => 'results',
+            'orderby' => 'published_date',
+            'order' => 'DESC',
+            'posts_per_page' => 2,
+            'paged' => $paged
+        );
+        $query->set( 'paged', $paged );
+        $query->set( 'posts_per_page', 2 ); 
+    }
+}
+add_action( 'pre_get_posts', 'custom_results_archive_query' );
+
+add_action('wp_ajax_filter_results', 'filter_results');
+add_action('wp_ajax_nopriv_filter_results', 'filter_results');
+
+function filter_results() {
+    $industry = isset($_POST['industry']) ? $_POST['industry'] : '';
+    $tags = isset($_POST['tags']) ? $_POST['tags'] : '';
+    $page = isset($_POST['page']) ? $_POST['page'] : 1;
+
+    $args = array(
+        'post_type' => 'results',
+        'orderby' => 'published_date',
+        'order' => 'DESC',
+        'posts_per_page' => 2,
+        'paged' => $page,
+    );
+
+    // Apply filters if provided
+    $tax_query = array(); // Initialize tax query array
+    if ($industry && $tags) {
+        $tax_query = array(
+            'relation' => 'AND',
+            array(
+                'taxonomy' => 'industry_taxonomy',
+                'field' => 'slug',
+                'terms' => $industry,
+            ),
+            array(
+                'taxonomy' => 'result_tag',
+                'field' => 'slug',
+                'terms' => $tags,
+            ),
+        );
+    } elseif ($industry) {
+        $tax_query[] = array(
+            'taxonomy' => 'industry_taxonomy',
+            'field' => 'slug',
+            'terms' => $industry,
+        );
+    } elseif ($tags) {
+        $tax_query[] = array(
+            'taxonomy' => 'result_tag',
+            'field' => 'slug',
+            'terms' => $tags,
+        );
+    }
+
+    // Add tax query to args
+    if (!empty($tax_query)) {
+        $args['tax_query'] = $tax_query;
+    }
+
+    $custom_loop = new WP_Query($args);
+
+    ob_start();
+    while ($custom_loop->have_posts()) : $custom_loop->the_post(); ?>
+<div class="single-result" data-aos="fade-up" data-aos-delay="200">
+    <div class="inner">
+        <div class="tags">
+            <?php 
+                    $tags = get_the_terms(get_the_ID(), 'result_tag');
+                    if ($tags && !is_wp_error($tags)) {
+                        foreach ($tags as $tag) {
+                            echo '<div class="prob"> <p>' . $tag->name . '</p></div>'; 
+                        }
+                    }
+                    ?>
+        </div>
+        <div class="logo">
+            <?php $img = get_field('logo'); ?>
+            <img src="<?=wp_get_attachment_image_url( $img, '' );?>" class="img-fluid">
+        </div>
+        <div class="content">
+            <?php if( get_field('title') ) : ?>
+            <h3><?=get_field('title');?></h3>
+            <?php else : ?>
+            <h3><?=get_the_title();?></h3>
+            <?php endif; ?>
+            <?php if( get_field('excerpt') ) : ?>
+            <p><?=wp_trim_words(get_field('excerpt'), 17);?></p>
+            <?php endif; ?>
+        </div>
+        <div class="read-more">
+            <a href="<?=get_the_permalink();?>" class="arrow-btn">Read More</a>
+        </div>
+    </div>
+</div>
+<?php endwhile;
+    wp_reset_postdata();
+
+    $output = ob_get_clean();
+
+// Get pagination links
+$pagination = paginate_links( array(
+    'total' => $custom_loop->max_num_pages,
+    'current' => $page,
+    'format' => '?page=%#%', 
+    'show_all' => false,
+    'type' => 'array',
+) );
+
+    // Send both results and pagination as JSON response
+    wp_send_json(array(
+        'results' => $output,
+        'pagination' => $pagination,
+    ));
+
+    die();
+}
+
 
 
 

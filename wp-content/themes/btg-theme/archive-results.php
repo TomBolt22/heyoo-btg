@@ -21,6 +21,41 @@
 
 <section class="results-wrap">
     <div class="container">
+
+        <div class="filter-container flex flex-row">
+
+            <label for="filter-industry">Search by Industry - </label>
+            <select id="filter-industry">
+                <option value="">All</option>
+                <?php 
+    $industry_terms = get_terms(array(
+        'taxonomy' => 'industry_taxonomy', 
+        'hide_empty' => false,
+    ));
+    if ($industry_terms && !is_wp_error($industry_terms)) :
+        foreach ($industry_terms as $term) : ?>
+                <option value="<?php echo $term->slug; ?>"><?php echo $term->name; ?></option>
+                <?php endforeach;
+    endif; ?>
+            </select>
+
+            <label for="filter-tags">Problem Solved - </label>
+            <select id="filter-tags">
+                <option value="">All</option>
+                <?php 
+    $terms = get_terms(array(
+        'taxonomy' => 'result_tag',
+        'hide_empty' => false,
+    ));
+    if ($terms && !is_wp_error($terms)) :
+        foreach ($terms as $term) : ?>
+                <option value="<?php echo $term->slug; ?>"><?php echo $term->name; ?></option>
+                <?php endforeach;
+    endif; ?>
+            </select>
+
+        </div>
+
         <div class="row">
             <div class="col-12">
                 <div class="results">
@@ -30,7 +65,7 @@
                             'post_type' => 'results',
                             'orderby' => 'published_date',
                             'order' => 'DESC',
-                            'posts_per_page' => 4,
+                            'posts_per_page' => 2,
                             'paged' => $paged
                         );
                         $custom_loop = new WP_Query($args);
@@ -38,8 +73,15 @@
                     ?>
                     <div class="single-result" data-aos="fade-up" data-aos-delay="200">
                         <div class="inner">
-                            <div class="prob">
-                                <p>Problem solved</p>
+                            <div class="tags">
+                                <?php 
+                                $tags = get_the_terms(get_the_ID(), 'result_tag');
+                                if ($tags && !is_wp_error($tags)) {
+                                    foreach ($tags as $tag) {
+                                        echo '<div class="prob"> <p>' . $tag->name . '</p></div>'; 
+                                    }
+                                }
+                                ?>
                             </div>
                             <div class="logo">
                                 <?php $img = get_field('logo'); ?>

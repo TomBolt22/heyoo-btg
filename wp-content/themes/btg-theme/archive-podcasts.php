@@ -60,7 +60,7 @@
                     </div>
                     <?php endwhile; wp_reset_postdata(); ?>
                 </div>
-                <div class="result-pagination">
+                <div class="podcast-pagination">
                     <?php 
                         // Pagination
                         echo paginate_links( array(
